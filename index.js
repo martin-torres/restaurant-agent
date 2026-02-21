@@ -32,7 +32,7 @@ const ALLOWED_USER_ID = "8104054725";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({
-  model: "models/gemini-1.5-flash-latest",
+  model: "models/gemini-2.5-flash",
   generationConfig: {
     temperature: 0,
     responseMimeType: "application/json"

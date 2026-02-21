@@ -8,7 +8,13 @@ const app = express();
 app.use(express.json());
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
+
+if (!TELEGRAM_TOKEN) {
+  console.error("Missing TELEGRAM_BOT_TOKEN");
+  process.exit(1);
+}
+
+const TELEGRAM_API = "https://api.telegram.org/bot" + TELEGRAM_TOKEN;
 
 const ALLOWED_USER_ID = "8104054725";
 
@@ -25,16 +31,32 @@ app.post("/telegram-webhook", async (req, res) => {
   const userId = message.from.id.toString();
   const text = message.text || "";
 
+  console.log("Message received:", text);
+  console.log("From user ID:", userId);
+  console.log("Chat ID:", chatId);
+
   if (userId !== ALLOWED_USER_ID) {
+    console.log("User not authorized");
     return res.sendStatus(200);
   }
 
-  console.log("Message received:", text);
+  try {
+    const response = await axios.post(
+      TELEGRAM_API + "/sendMessage",
+      {
+        chat_id: chatId,
+        text: "Received: " + text
+      }
+    );
 
-  await axios.post(`${TELEGRAM_API}/sendMessage`, {
-    chat_id: chatId,
-    text: `Received: ${text}`
-  });
+    console.log("Telegram API response:", response.data);
+  } catch (error) {
+    if (error.response) {
+      console.log("Telegram API error:", error.response.data);
+    } else {
+      console.log("Axios error:", error.message);
+    }
+  }
 
   res.sendStatus(200);
 });

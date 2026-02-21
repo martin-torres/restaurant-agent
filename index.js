@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_API = `https://api.telegram.org/bot${7934650525:AAFH8EGqXZbWGbfILqcVQVFslpZ7YwxKSEY}`;
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
 
 const ALLOWED_USER_ID = "8104054725";
 
